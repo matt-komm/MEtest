@@ -10,7 +10,16 @@ C     Returns amplitude squared summed/avg over colors
 C     and helicities
 C     for the point in phase space P(0:3,NEXTERNAL)
 C     
-C     Process: g g > t t~ WEIGHTED=2
+C     Process: u u~ > t t~ WEIGHTED=2
+C     *   Decay: t > b mu+ vm WEIGHTED=4
+C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
+C     Process: c c~ > t t~ WEIGHTED=2
+C     *   Decay: t > b mu+ vm WEIGHTED=4
+C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
+C     Process: d d~ > t t~ WEIGHTED=2
+C     *   Decay: t > b mu+ vm WEIGHTED=4
+C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
+C     Process: s s~ > t t~ WEIGHTED=2
 C     *   Decay: t > b mu+ vm WEIGHTED=4
 C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
 C     
@@ -293,7 +302,7 @@ C
       DATA (NHEL(I, 254),I=1,8) / 1, 1, 1, 1, 1, 1,-1, 1/
       DATA (NHEL(I, 255),I=1,8) / 1, 1, 1, 1, 1, 1, 1,-1/
       DATA (NHEL(I, 256),I=1,8) / 1, 1, 1, 1, 1, 1, 1, 1/
-      DATA IDEN/256/
+      DATA IDEN/36/
 C     ----------
 C     BEGIN CODE
 C     ----------
@@ -324,7 +333,16 @@ C
 C     Returns amplitude squared summed/avg over colors
 C     for the point with external lines W(0:6,NEXTERNAL)
 C     
-C     Process: g g > t t~ WEIGHTED=2
+C     Process: u u~ > t t~ WEIGHTED=2
+C     *   Decay: t > b mu+ vm WEIGHTED=4
+C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
+C     Process: c c~ > t t~ WEIGHTED=2
+C     *   Decay: t > b mu+ vm WEIGHTED=4
+C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
+C     Process: d d~ > t t~ WEIGHTED=2
+C     *   Decay: t > b mu+ vm WEIGHTED=4
+C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
+C     Process: s s~ > t t~ WEIGHTED=2
 C     *   Decay: t > b mu+ vm WEIGHTED=4
 C     *   Decay: t~ > b~ mu- vm~ WEIGHTED=4
 C     
@@ -333,7 +351,7 @@ C
 C     CONSTANTS
 C     
       INTEGER    NGRAPHS
-      PARAMETER (NGRAPHS=3)
+      PARAMETER (NGRAPHS=1)
       INTEGER    NEXTERNAL
       PARAMETER (NEXTERNAL=8)
       INTEGER    NWAVEFUNCS, NCOLOR
@@ -364,17 +382,17 @@ C
 C     
 C     COLOR DATA
 C     
-      DATA DENOM(1)/3/
-      DATA (CF(I,  1),I=  1,  2) /   16,   -2/
-C     1 T(1,2,3,6)
-      DATA DENOM(2)/3/
-      DATA (CF(I,  2),I=  1,  2) /   -2,   16/
-C     1 T(2,1,3,6)
+      DATA DENOM(1)/1/
+      DATA (CF(I,  1),I=  1,  2) /    9,    3/
+C     1 T(2,1) T(3,6)
+      DATA DENOM(2)/1/
+      DATA (CF(I,  2),I=  1,  2) /    3,    9/
+C     1 T(2,6) T(3,1)
 C     ----------
 C     BEGIN CODE
 C     ----------
-      CALL VXXXXX(P(0,1),ZERO,NHEL(1),-1*IC(1),W(1,1))
-      CALL VXXXXX(P(0,2),ZERO,NHEL(2),-1*IC(2),W(1,2))
+      CALL IXXXXX(P(0,1),ZERO,NHEL(1),+1*IC(1),W(1,1))
+      CALL OXXXXX(P(0,2),ZERO,NHEL(2),-1*IC(2),W(1,2))
       CALL OXXXXX(P(0,3),MB,NHEL(3),+1*IC(3),W(1,3))
       CALL IXXXXX(P(0,4),ZERO,NHEL(4),-1*IC(4),W(1,4))
       CALL OXXXXX(P(0,5),ZERO,NHEL(5),+1*IC(5),W(1,5))
@@ -385,17 +403,11 @@ C     ----------
       CALL IXXXXX(P(0,8),ZERO,NHEL(8),-1*IC(8),W(1,4))
       CALL FFV2_3(W(1,4),W(1,3),GC_100,MW,WW,W(1,7))
       CALL FFV2_2(W(1,6),W(1,7),GC_100,MT,WT,W(1,4))
-      CALL VVV1P0_1(W(1,1),W(1,2),GC_10,ZERO,ZERO,W(1,7))
+      CALL FFV1P0_3(W(1,1),W(1,2),GC_11,ZERO,ZERO,W(1,7))
 C     Amplitude(s) for diagram number 1
       CALL FFV1_0(W(1,4),W(1,5),W(1,7),GC_11,AMP(1))
-      CALL FFV1_1(W(1,5),W(1,1),GC_11,MT,WT,W(1,7))
-C     Amplitude(s) for diagram number 2
-      CALL FFV1_0(W(1,4),W(1,7),W(1,2),GC_11,AMP(2))
-      CALL FFV1_2(W(1,4),W(1,1),GC_11,MT,WT,W(1,7))
-C     Amplitude(s) for diagram number 3
-      CALL FFV1_0(W(1,7),W(1,5),W(1,2),GC_11,AMP(3))
-      JAMP(1)=-IMAG1*AMP(1)+AMP(2)
-      JAMP(2)=+IMAG1*AMP(1)+AMP(3)
+      JAMP(1)=+1./2.*(-1./3.*AMP(1))
+      JAMP(2)=+1./2.*(+AMP(1))
 
       MATRIX = 0.D0
       DO I = 1, NCOLOR

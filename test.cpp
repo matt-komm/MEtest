@@ -218,24 +218,7 @@ int main()
         //printf("M(fortan)=%5.3e, M(cpp)=%5.3e\n",prob_f,prob_cpp);
         
         hist.Fill((prob_f-prob_cpp)/prob_f);
-        /*
-        std::vector<double*> m_vec = createMomentumRefVector_F(u1,u2,b1,mu1,vm1,b2,mu2,vm2);
-        for (int j = 0; j < 4; ++j)
-        {
-            for (int x=0;x<8;++x)
-            {
-                printf("%i,%i: %5.3f; ",j,x,m_vec[j][x]);
-            }
-            printf("\n");
-        }
-        //double prob = getProbability(process,m_vec);
-        double prob =0;
-        double** bla = m_vec.data();
-        smatrix_(&bla,&prob);
-        std::cout<<setiosflags(ios::fixed) << setprecision(17)<<prob<<std::endl;
-        */
-        //printf("prob=%6.3e\n",prob);
-        //printf("\n");
+        
     }
     TCanvas cv("cv","",800,600);
     hist.Draw();
